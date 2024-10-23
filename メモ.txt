@@ -1,0 +1,13 @@
+メモ
+
+Pythonのstreamlitを使って簡単に検定できるものを作りました
+
+・Excelファイルに対応
+
+・任意のカラムに対応
+
+streamlitにはデプロイできる機能があったのでせっかくだったら公開しようと思いましたが残念ながらscipyのインストールがデプロイ環境でできず断念しました
+
+Githubにはアップロードしましたので一応URLだけ貼っておきます
+
+該当URL: https://github.com/aru-st/-hypothesis_testing_program/tree/main
