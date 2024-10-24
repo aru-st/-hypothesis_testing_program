@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-#/*******************/
+#/***********/
 #/* 処理実装 */
-#/*******************/
+#/***********/
 
 def process(al, freedom, ave, st_er):
     rejection = stats.t.interval(1 - al, df = freedom, loc = ave, scale = st_er)  #棄却域
@@ -45,7 +45,7 @@ def main():
 
         # カラムの選択
         columns = df.columns.tolist()
-        selected_columns = st.multiselect("表示したいカラムを選択してください", columns)
+        selected_columns = st.multiselect("検定したいカラムを選択してください", columns)
 
         # ユーザーがカラムを選択した場合の処理
         if selected_columns and len(selected_columns) < 2:
@@ -59,8 +59,8 @@ def main():
             st.dataframe(selected_data)
 
             #各種統計量の計算
-            st.session_state.ave = selected_data.mean() #これ明らかにおかしいよな多分
-            st.session_state.u = selected_data.std()
+            st.session_state.ave = selected_data.mean().iloc[0]
+            st.session_state.u = selected_data.std().iloc[0]
             st.session_state.n = len(selected_data)
             st.session_state.se = st.session_state.u / np.sqrt(st.session_state.n)
 
@@ -82,11 +82,11 @@ def main():
     #    st.write(st.session_state.V)
 
     if st.button("仮説検定をする") and st.session_state.flag and (st.session_state.alpha > 0 and st.session_state.alpha < 1):
-        rejection = stats.t.interval(1 - st.session_state.alpha, df = st.session_state.n - 1, loc = st.session_state.ave, scale = st.session_state.se)  #棄却域
+        rejection = stats.t.interval(1 - st.session_state.alpha, df = st.session_state.n - 1, loc = st.session_state.mu, scale = st.session_state.se)  #棄却域
         st.write(f"棄却域は{rejection[0]}以上{rejection[1]}以下です。")
-        st.write("帰無仮説の平均値がこの棄却域の中に入っていれば棄却されます")
+        st.write("標本平均がこの棄却域の中に入っていなければ棄却されます")
 
-        if st.session_state.mu < rejection[0] or st.session_state.mu > rejection[1]:
+        if st.session_state.ave < rejection[0] or st.session_state.ave > rejection[1]:
             st.write("帰無仮説は棄却される")
         else:
             st.write("帰無仮説は棄却されない")
